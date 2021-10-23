@@ -48,7 +48,7 @@ func Search(ctx context.Context, searchTerm string, opts ...SearchOptions) ([]Re
 
 	c.OnRequest(func(r *colly.Request) {
 		if err := ctx.Err(); err != nil {
-			r.Abrot()
+			r.Abort()
 			rErr = err
 			return
 		}
@@ -59,11 +59,11 @@ func Search(ctx context.Context, searchTerm string, opts ...SearchOptions) ([]Re
 	})
 
 	c.OnHTML("li.b_algo", func(e *colly.HTMLElement) {
-		sel := e.Dom
+		sel := e.DOM
 
-		linkHref, _ = sel.Find("a").Attr("href")
+		linkHref, _ := sel.Find("a").Attr("href")
 		linkText := strings.TrimSpace(linkHref)
-		titleText := strings.TrimSpace(sel.Find("h2 > a"))
+		titleText := strings.TrimSpace(sel.Find("h2 > a").Text())
 
 		if linkText != "" && linkText != "#" && titleText != "" {
 			result := Result{
